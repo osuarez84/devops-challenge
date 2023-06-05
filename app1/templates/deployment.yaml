@@ -4,6 +4,7 @@ metadata:
   name: app1-deployment
   labels:
     app: app1
+  namespace: apps
 spec:
   selector:
     matchLabels:
@@ -13,17 +14,31 @@ spec:
       labels:
         app: app1
     spec:
+      serviceAccountName: app1-sa
+      automountServiceAccountToken: false
       containers:
         - name: api
-          image: debian:bullseye-slim
+          image: alpine:3.14
           command:
-            - ["./script/run.sh"]
+            - "/bin/sh"
+            - "/script/run.sh"
           envFrom:
             - configMapRef:
                 name: app1-configmap
           volumeMounts:
             - name: script
               mountPath: /script
+          resources:
+            requests:
+              memory: {{ .Values.api_resources.requests.memory }}
+              cpu: {{ .Values.api_resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.api_resources.limits.memory }}
+              cpu: {{ .Values.api_resources.limits.cpu }}
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
       volumes:
         - name: script
           configMap:

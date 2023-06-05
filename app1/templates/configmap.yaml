@@ -2,16 +2,18 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app1-configmap
+  namespace: apps
 data:
   TIMEZONE: {{ .Values.timezone }}
   TIME: {{ .Values.time }}
---
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: script-configmap
+  namespace: apps
 data:
   run.sh: |
-    #!/bin/bash
+    #!/bin/sh
     
-    while true; do echo 'Last deployment made at $TIMEZONE - $TIME'; sleep 10; done
+    while true; do echo "Last deployment made at $TIMEZONE - $TIME"; sleep 10; done
