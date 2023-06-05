@@ -1,3 +1,7 @@
 apiVersion: v2
-name: devops-challenge
+name: app1
+description: A Chart for the Idoven challenge
 version: 1.0.0
+maintainers:
+  - name: osuarez84
+    email: omsulo@gmail.com

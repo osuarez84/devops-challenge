@@ -1,40 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app1-deployment
+  name: {{ .Chart.Name }}-deployment
   labels:
-    app: app1
+    app: {{ .Chart.Name }}
   namespace: apps
 spec:
   selector:
     matchLabels:
-      app: app1
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: app1
+        app: {{ .Chart.Name }}
     spec:
-      serviceAccountName: app1-sa
+      serviceAccountName: {{ .Chart.Name }}-sa
       automountServiceAccountToken: false
       containers:
         - name: api
-          image: alpine:3.14
+          image: {{ .Values.application.api.image }}
           command:
             - "/bin/sh"
+            - "-c"
             - "/script/run.sh"
           envFrom:
             - configMapRef:
-                name: app1-configmap
+                name: {{ .Chart.Name }}-configmap
           volumeMounts:
             - name: script
               mountPath: /script
           resources:
             requests:
-              memory: {{ .Values.api_resources.requests.memory }}
-              cpu: {{ .Values.api_resources.requests.cpu }}
+              memory: {{ .Values.application.api.resources.requests.memory }}
+              cpu: {{ .Values.application.api.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.api_resources.limits.memory }}
-              cpu: {{ .Values.api_resources.limits.cpu }}
+              memory: {{ .Values.application.api.resources.limits.memory }}
+              cpu: {{ .Values.application.api.resources.limits.cpu }}
           securityContext:
             privileged: false
             readOnlyRootFilesystem: true
