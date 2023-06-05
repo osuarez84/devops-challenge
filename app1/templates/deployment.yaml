@@ -21,7 +21,6 @@ spec:
           image: {{ .Values.application.api.image }}
           command:
             - "/bin/sh"
-            - "-c"
             - "/script/run.sh"
           envFrom:
             - configMapRef:
